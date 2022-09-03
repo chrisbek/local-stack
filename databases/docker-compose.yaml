@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  database:
+    image: mysql:5.7
+    container_name: "localdb"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./MySQL/db1:/var/lib/mysql
+      # MySQL docker container executes script files from /docker-entrypoint-initdb.d/ folder
+      # in the ascending order of file names
+      - ./Init/localdb.sql:/docker-entrypoint-initdb.d/localdb.sql
+    networks:
+      main-net:
+        ipv4_address: 172.30.0.4
+        aliases:
+          - "localdb"
+    ports:
+      - "3333:3306"
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    #        command: -jar DynamoDBLocal.jar -sharedDb -inMemory -port 8088
+    command: -jar DynamoDBLocal.jar -sharedDb -port 8088
+    container_name: "localddb"
+    working_dir: /home/dynamodblocal
+    volumes:
+      - ./DynamoDb/db1:/home/dynamodblocal/data
+    networks:
+      main-net:
+        ipv4_address: 172.30.0.8
+        aliases:
+          - "dynamodb.local"
+    ports:
+      - '8088:8088'
+
+networks:
+  main-net:
+    external: true
