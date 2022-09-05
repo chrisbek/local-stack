@@ -13,10 +13,16 @@ stop-databases:
 	docker-compose -p dbs -f databases/docker-compose.yaml down
 
 start-kafka:
-	docker-compose -p dbs -f kafka/docker-compose.kafka.yaml up -d
+	docker-compose -p kafka -f kafka/docker-compose.kafka.yaml up -d
 
 stop-kafka:
-	docker-compose -p dbs -f kafka/docker-compose.kafka.yaml down
+	docker-compose -p kafka -f kafka/docker-compose.kafka.yaml down
+
+start-nginx:
+	docker-compose -p reverse_proxy -f nginx/docker-compose.reverse.proxy.yaml up -d
+
+stop-nginx:
+	docker-compose -p reverse_proxy -f nginx/docker-compose.reverse.proxy.yaml down
 
 
 .PHONY: create-network delete-network start-databases stop-databases
